@@ -11,11 +11,14 @@
 //----------------------------------INCLUSION DE HEADERS DE LAS CLASES-----------------------------
 #include "expresion_diferente.h"
 #include "expresion_y.h"
+#include "expresion_epsilon.h"
 #include "expresion_igual.h"
 #include "expresion_or.h"
 #include "expresion_por.h"
 #include "expresion_por.h"
 #include "produccion_declaracion_variable5.h"
+#include "produccion_declaracion_variable7.h"
+#include "produccion_declaracion_variable_8.h"
 #include "expresion_mas.h"
 #include "expresion_masmas.h"
 #include "expresion_menosmenos.h"
@@ -356,6 +359,8 @@ DECLARACION_VARIABLE:conservar var TIPO LISTA_NOMBRE{$$=new produccion_declaraci
 |var TIPO LISTA_NOMBRE ASIGNACION{$$=new produccion_declaracion_variable4($2,$3,$4);}
 |var TIPO arreglo LISTA_NOMBRE ASIGNACION{$$=new produccion_declaracion_variable5($2,$4,$5);}
 |var TIPO arreglo LISTA_NOMBRE{$$=new produccion_declaracion_variable6($2,$4);}
+|conservar var TIPO arreglo LISTA_NOMBRE ASIGNACION{$$=new produccion_declaracion_variable7($1,$3,$5,$6);}
+|conservar var TIPO arreglo LISTA_NOMBRE{$$=new produccion_declaracion_variable8($1,$3,$5);}
 
 TIPO: boolean{$$=new produccion_tipo1($1);}
 |entero{$$=new produccion_tipo2($1);}
@@ -400,8 +405,8 @@ EXPRESION :EXPRESION igualigual EXPRESION{$$=new Expresion_igual($1,$3);}
                 |caracter{$$=new expresion_caracter($1);}
                 |TRUE{$$=new expresion_true($1);}
                 |FALSE{$$=new expresion_false($1);}
-                |;
-DECLARADOR
+                |{$$ = new expresion_epsilon();}
+
 CICLOS : si aparen EXPRESION cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo sino abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_ciclos1($3,$6,$10);}
         |si aparen EXPRESION cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_ciclos2($3,$6);}
         |mientras aparen EXPRESION cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_ciclos3($3,$6);}
@@ -422,7 +427,7 @@ LISTA_PARAMETROS:LISTA_PARAMETROS coma PARAMETRO{$$=new produccion_lista_paramet
 |PARAMETRO{$$=new produccion_lista_parametros2($1);}
 |{$$=new produccion_lista_parametros3();};
 
-PARAMETRO: TIPO iden{$$=new produccion_parametro1($1,$2);};
+PARAMETRO: TIPO DECLARADOR{$$=new produccion_parametro1($1,$2);};
 
 PINTAR_P: pintarp aparen EXPRESION coma EXPRESION coma cadenacomillas coma EXPRESION cparen fin_sentencia{$$=new produccion_pintar_p1($3,$5,$7,$9);};
 PINTAR_OR: pintaror aparen EXPRESION coma EXPRESION coma cadenacomillas coma EXPRESION coma EXPRESION coma EXPRESION cparen fin_sentencia{$$=new produccion_pintar_or1($3,$5,$7,$9,$11,$13);};
