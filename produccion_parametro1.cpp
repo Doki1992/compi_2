@@ -1,6 +1,6 @@
 #include "produccion_parametro1.h"
 #include"visitor.h"
-produccion_parametro1::produccion_parametro1(produccion_tipo *pt,QString id)
+produccion_parametro1::produccion_parametro1(produccion_tipo *pt, declarador *id)
 {
     this->pt=pt;
     this->id=id;
