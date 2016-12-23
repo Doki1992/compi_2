@@ -1,8 +1,7 @@
 #include "produccion_ini2.h"
 #include"visitor.h"
-produccion_ini2::produccion_ini2(produccion_lienzo *pl,QString fila)
+produccion_ini2::produccion_ini2(produccion_lienzo *pl)
 {
-    this->fila=fila;
     this->pl=pl;
 }
 

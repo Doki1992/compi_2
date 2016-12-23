@@ -10,8 +10,7 @@ public:
     produccion_expresion*p2;
     QString cadena;
     produccion_expresion*p4;
-    QString fila;
-    produccion_pintar_p1(produccion_expresion*p1,produccion_expresion*p2,QString cadena,produccion_expresion*p4,QString fila);
+    produccion_pintar_p1(produccion_expresion*p1,produccion_expresion*p2,QString cadena,produccion_expresion*p4);
     virtual QString accept(visitor *v);
 };
 

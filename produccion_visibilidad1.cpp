@@ -1,8 +1,7 @@
 #include "produccion_visibilidad1.h"
 #include"visitor.h"
-produccion_visibilidad1::produccion_visibilidad1(QString t, QString fila)
+produccion_visibilidad1::produccion_visibilidad1(QString t)
 {
-    this->fila=fila;
     this->tipo=t;
 }
 

@@ -5,8 +5,7 @@ class produccion_tipo1:public produccion_tipo
 {
 public:
     QString tipo;
-    QString fila;
-    produccion_tipo1(QString tipo,QString fila);
+    produccion_tipo1(QString tipo);
     virtual QString accept(visitor *v);
 };
 

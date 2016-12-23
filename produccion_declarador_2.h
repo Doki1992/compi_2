@@ -5,8 +5,8 @@
 class produccion_declarador_2: public declarador
 {
 public:
-    QString fila;
-    produccion_declarador_2(QString iden,lista_corchetes * lc,QString fila);
+    produccion_declarador_2(QString iden,
+    lista_corchetes * lc);
     QString iden;
     lista_corchetes * lc;
     virtual QString accept(visitor *v);

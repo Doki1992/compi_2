@@ -1,8 +1,7 @@
 #include "produccion_lista_case1.h"
 #include"visitor.h"
-produccion_lista_case1::produccion_lista_case1(produccion_lista_case*pc, produccion_expresion*pe, produccion_lista_instrucciones*pi, QString fila)
+produccion_lista_case1::produccion_lista_case1(produccion_lista_case*pc,produccion_expresion*pe,produccion_lista_instrucciones*pi)
 {
-    this->fila=fila;
     this->pc=pc;
     this->pi=pi;
     this->pe=pe;

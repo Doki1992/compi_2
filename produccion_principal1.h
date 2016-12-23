@@ -6,9 +6,8 @@
 class produccion_principal1:public produccion_principal
 {
 public:
-    QString fila;
     produccion_lista_instrucciones*pl;
-    produccion_principal1(produccion_lista_instrucciones*pl,QString fila);
+    produccion_principal1(produccion_lista_instrucciones*pl);
     virtual QString accept(visitor *v);
 };
 

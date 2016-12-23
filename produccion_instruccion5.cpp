@@ -1,8 +1,7 @@
 #include "produccion_instruccion5.h"
 #include"visitor.h"
-produccion_instruccion5::produccion_instruccion5(produccion_pintar_or*pp,QString fila)
+produccion_instruccion5::produccion_instruccion5(produccion_pintar_or*pp)
 {
-    this->fila=fila;
     this->pp=pp;
 }
 QString produccion_instruccion5::accept(visitor *v){

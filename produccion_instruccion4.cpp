@@ -1,8 +1,7 @@
 #include "produccion_instruccion4.h"
 #include"visitor.h"
-produccion_instruccion4::produccion_instruccion4(produccion_ciclos *pc,QString fila)
+produccion_instruccion4::produccion_instruccion4(produccion_ciclos *pc)
 {
-    this->fila=fila;
     this->pc=pc;
 }
 QString produccion_instruccion4::accept(visitor *v){

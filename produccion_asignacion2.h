@@ -5,9 +5,9 @@
 class produccion_asignacion2:public produccion_asignacion
 {
 public:
-    QString fila;
     produccion_expresion*pe;
-    produccion_asignacion2(produccion_expresion*pe,QString fila);
+    QString me ="produccion_asignacion2";
+    produccion_asignacion2(produccion_expresion*pe);
     virtual QString accept(visitor *v);
 };
 

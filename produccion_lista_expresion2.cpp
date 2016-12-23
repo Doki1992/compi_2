@@ -1,8 +1,7 @@
 #include "produccion_lista_expresion2.h"
 #include"visitor.h"
-produccion_lista_expresion2::produccion_lista_expresion2(produccion_expresion *pe, QString fila)
+produccion_lista_expresion2::produccion_lista_expresion2(produccion_expresion *pe)
 {
-    this->fila=fila;
     this->pe=pe;
 }
 

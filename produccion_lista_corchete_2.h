@@ -6,8 +6,7 @@
 class produccion_lista_corchete_2: public lista_corchetes
 {
 public:
-    QString fila;
-    produccion_lista_corchete_2(produccion_expresion * exp,QString fila);
+    produccion_lista_corchete_2(produccion_expresion * exp);
     produccion_expresion * exp;
     virtual QString accept(visitor *v);
 };

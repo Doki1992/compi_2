@@ -1,8 +1,7 @@
 #include "produccion_instruccion8.h"
 #include"visitor.h"
-produccion_instruccion8::produccion_instruccion8(produccion_sumarizar *ps, QString fila)
+produccion_instruccion8::produccion_instruccion8(produccion_sumarizar *ps)
 {
-    this->fila=fila;
     this->ps=ps;
 }
 QString produccion_instruccion8::accept(visitor *v){

@@ -1,8 +1,7 @@
 #include "produccion_lista_asignacion4.h"
 #include"visitor.h"
-produccion_lista_asignacion4::produccion_lista_asignacion4(QString iden, produccion_expresion *pe,QString fila)
+produccion_lista_asignacion4::produccion_lista_asignacion4(QString iden, produccion_expresion *pe)
 {
-    this->fila=fila;
     this->iden=iden;
     this->pe=pe;
 }

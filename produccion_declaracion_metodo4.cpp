@@ -1,8 +1,7 @@
 #include "produccion_declaracion_metodo4.h"
 #include"visitor.h"
-produccion_declaracion_metodo4::produccion_declaracion_metodo4(declarador *iden, produccion_lista_parametros*pp, produccion_lista_instrucciones*pl,QString fila)
+produccion_declaracion_metodo4::produccion_declaracion_metodo4(declarador *iden, produccion_lista_parametros*pp, produccion_lista_instrucciones*pl)
 {
-    this->fila=fila;
     this->pl=pl;
     this->pp=pp;
     this->iden=iden;

@@ -6,10 +6,9 @@
 class produccion_parametro1:public produccion_parametro
 {
 public:
-    QString fila;
     produccion_tipo*pt;
      declarador *id;
-    produccion_parametro1(produccion_tipo*pt, declarador* id,QString fila);
+    produccion_parametro1(produccion_tipo*pt, declarador* id);
     virtual QString accept(visitor *v);
 };
 

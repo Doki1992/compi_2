@@ -1,8 +1,7 @@
 #include "produccion_instruccion10.h"
 #include"visitor.h"
-produccion_instruccion10::produccion_instruccion10(QString cont,QString fila)
+produccion_instruccion10::produccion_instruccion10(QString cont)
 {
-    this->fila=fila;
     this->cont=cont;
 }
 QString produccion_instruccion10::accept(visitor *v){

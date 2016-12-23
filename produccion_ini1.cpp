@@ -1,8 +1,7 @@
 #include "produccion_ini1.h"
 #include"visitor.h"
-produccion_ini1::produccion_ini1(produccion_ini *pi, produccion_lienzo *pl, QString fila)
+produccion_ini1::produccion_ini1(produccion_ini *pi, produccion_lienzo *pl)
 {
-    this->fila=fila;
     this->pi=pi;
     this->pl=pl;
 }

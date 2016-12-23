@@ -2,9 +2,8 @@
 #include "visitor.h"
 produccion_declaracion_variable_8::produccion_declaracion_variable_8(QString conservar,
                                                                      produccion_tipo*tipo,
-                                                                     produccion_lista_nombre*lnombre, QString fila)
+                                                                     produccion_lista_nombre*lnombre)
 {
-    this->fila=fila;
     this->conservar=conservar;
     this->lnombre=lnombre;
     this->tipo=tipo;

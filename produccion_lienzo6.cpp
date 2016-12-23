@@ -1,8 +1,7 @@
 #include "produccion_lienzo6.h"
 #include"visitor.h"
-produccion_lienzo6::produccion_lienzo6(produccion_lista_asignacion*pl, QString fila)
+produccion_lienzo6::produccion_lienzo6(produccion_lista_asignacion*pl)
 {
-    this->fila=fila;
     this->pl=pl;
 }
 

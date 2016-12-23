@@ -1,8 +1,7 @@
 #include "produccion_ciclos6.h"
 #include"visitor.h"
-produccion_ciclos6::produccion_ciclos6(produccion_expresion *pe, produccion_lista_case *pl, QString fila)
+produccion_ciclos6::produccion_ciclos6(produccion_expresion *pe, produccion_lista_case *pl)
 {
-    this->fila=fila;
     this->pe=pe;
     this->pl=pl;
 }

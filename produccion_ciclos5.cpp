@@ -1,8 +1,7 @@
 #include "produccion_ciclos5.h"
 #include"visitor.h"
-produccion_ciclos5::produccion_ciclos5(produccion_lista_instrucciones *pl, produccion_expresion *pe,QString fila)
+produccion_ciclos5::produccion_ciclos5(produccion_lista_instrucciones *pl, produccion_expresion *pe)
 {
-    this->fila=fila;
     this->pe=pe;
     this->pl=pl;
 }

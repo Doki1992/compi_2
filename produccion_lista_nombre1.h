@@ -5,10 +5,9 @@
 class produccion_lista_nombre1:public produccion_lista_nombre
 {
 public:
-    QString fila;
     produccion_lista_nombre*pl;
     declarador* iden;
-    produccion_lista_nombre1(produccion_lista_nombre*pl,declarador *iden,QString fila);
+    produccion_lista_nombre1(produccion_lista_nombre*pl,declarador *iden);
     virtual QString accept(visitor *v);
 };
 

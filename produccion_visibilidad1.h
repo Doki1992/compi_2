@@ -4,9 +4,8 @@
 class produccion_visibilidad1:public produccion_visibilidad
 {
 public:
-    QString fila;
     QString tipo;
-    produccion_visibilidad1(QString t,QString fila);
+    produccion_visibilidad1(QString t);
     virtual QString accept(visitor *v);
 };
 

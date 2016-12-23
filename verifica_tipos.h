@@ -9,7 +9,6 @@ public:
     QString asigna_tipo(QString valor, QString valor2);
     QString check_doble(QString v);
     QString check_bool(QString v);
-    QString check_char(QString v);
     QString check_entero(QString v);
     QString suma_bool(QString v1,QString v2);
     QString resta_bool(QString v1,QString v2);

@@ -24,13 +24,3 @@ Dialog::~Dialog()
 {
     delete ui;
 }
-
-void Dialog::on_pushButton_clicked()
-{
-    QString nombre=ui->lineEdit->text();
-    QString comentario=ui->textEdit->toPlainText();
-    QString name="imagen.jpg";
-    QPixmap p=ui->graphicsView->grab();
-    p.save(name);
-
-}

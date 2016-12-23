@@ -9,11 +9,10 @@ class produccion_declaracion_metodo1:public produccion_declaracion_metodo
 {
 public:
     declarador* iden;
-    QString fila;
     produccion_lista_instrucciones*pl;
     produccion_lista_parametros*pp;
     produccion_tipo*pt;
-    produccion_declaracion_metodo1(produccion_tipo*pt,declarador* iden,produccion_lista_parametros*pp,produccion_lista_instrucciones*pl,QString fila);
+    produccion_declaracion_metodo1(produccion_tipo*pt,declarador* iden,produccion_lista_parametros*pp,produccion_lista_instrucciones*pl);
     virtual QString accept(visitor *v);
 };
 

@@ -4,9 +4,8 @@
 class produccion_instruccion10:public produccion_instruccion
 {
 public:
-    QString fila;
     QString cont;
-    produccion_instruccion10(QString cont,QString fila);
+    produccion_instruccion10(QString cont);
     virtual QString accept(visitor *v);
 };
 

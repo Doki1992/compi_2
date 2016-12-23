@@ -10,10 +10,9 @@
 class produccion_declaracion_variable_8:public produccion_declaracion_variable
 {
 public:
-    QString fila;
     produccion_declaracion_variable_8(QString conservar,
     produccion_tipo*tipo,
-    produccion_lista_nombre*lnombre,QString fila);
+    produccion_lista_nombre*lnombre);
     QString conservar;
     produccion_tipo*tipo;
     produccion_lista_nombre*lnombre;

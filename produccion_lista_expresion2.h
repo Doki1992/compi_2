@@ -5,9 +5,8 @@
 class produccion_lista_expresion2:public produccion_lista_expresion
 {
 public:
-    QString fila;
     produccion_expresion*pe;
-    produccion_lista_expresion2(produccion_expresion*pe,QString fila);
+    produccion_lista_expresion2(produccion_expresion*pe);
     virtual QString accept(visitor *v);
 };
 

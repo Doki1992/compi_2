@@ -5,9 +5,8 @@
 class produccion_lista_instrucciones2:public produccion_lista_instrucciones
 {
 public:
-    QString fila;
     produccion_instruccion*pi;
-    produccion_lista_instrucciones2(produccion_instruccion*pi,QString fila);
+    produccion_lista_instrucciones2(produccion_instruccion*pi);
     virtual QString accept(visitor *v);
 };
 

@@ -8,8 +8,7 @@ class produccion_asignacion1:public produccion_asignacion
 public:
     produccion_lista_asignacion*pl;
     produccion_expresion*pe;
-    QString fila;
-    produccion_asignacion1(produccion_expresion*pe,produccion_lista_asignacion*pl,QString fila);
+    produccion_asignacion1(produccion_expresion*pe,produccion_lista_asignacion*pl);
     virtual QString accept(visitor *v);
 };
 

@@ -135,9 +135,8 @@ SOURCES += main.cpp\
     produccion_lista_expresion2.cpp \
     dialog.cpp \
     mostrar_lineas.cpp \
-    token_error.cpp \
-    expresion_nulo.cpp \
-    vector.cpp
+    expresion_llamada_metodo.cpp \
+    heredados.cpp
 
 HEADERS  += mainwindow.h \
     lexico.l \
@@ -291,9 +290,8 @@ HEADERS  += mainwindow.h \
     produccion_lista_expresion2.h \
     dialog.h \
     mostrar_lineas.h \
-    token_error.h \
-    expresion_nulo.h \
-    vector.h
+    expresion_llamada_metodo.h \
+    heredados.h
 
 FORMS    += mainwindow.ui \
     dialog.ui

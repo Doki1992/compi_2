@@ -1,8 +1,7 @@
 #include "produccion_asignacion2.h"
 #include"visitor.h"
-produccion_asignacion2::produccion_asignacion2(produccion_expresion*pe, QString fila)
+produccion_asignacion2::produccion_asignacion2(produccion_expresion*pe)
 {
-    this->fila=fila;
     this->pe=pe;
 }
 
