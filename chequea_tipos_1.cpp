@@ -9,10 +9,12 @@ chequea_tipos_1::chequea_tipos_1(tabla_simbolos *ts)
     this->ts=ts;
     this->lienzo_activo=NULL;
     this->metodo_activo=NULL;
+
 }
-QString chequea_tipos_1::visit_pintar_s1(produccion_pintar_s11 *pd)
+
+QString chequea_tipos_1::visit_pintar_s11(produccion_pintar_s11 *pd)
 {
-    //qDebug()<<pd->pl->accept
+
 }
 
 QString chequea_tipos_1::visit_pintar_or1(produccion_pintar_or1 *pd)
@@ -71,12 +73,12 @@ QString chequea_tipos_1::visit_lienzo1(produccion_lienzo1 *pd)
     // en este nodo se guarda el lienzo
     tabla_simbolos *t = new tabla_simbolos();// tabla de simbolos del lienzo actual
     QString nombre_lienzo=pd->iden; //nombre lienzo
-    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL);
+    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL,"");
     if(ts->contains(nombre_lienzo)==true){
         qDebug()<<"error esta clase ya existe";
         return "error esta clase ya existe";
     }else{
-        lienzo_activo = new lienzo("", nombre_lienzo,"publico",pd,t);
+        lienzo_activo = new lienzo("", nombre_lienzo,"publico",pd,t,"");
         pd->pl->accept(this);// instrucciones del lienzo
         nuevo->hereda=lienzo_activo->hereda;
         nuevo->id=lienzo_activo->id;
@@ -96,12 +98,12 @@ QString chequea_tipos_1::visit_lienzo2(produccion_lienzo2 *pd)
     tabla_simbolos *t = new tabla_simbolos();// tabla de simbolos del lienzo actual
     QString visibilidad=pd->pv->accept(this);//visibilidad
     QString nombre_lienzo=pd->iden; //nombre lienzo
-    lienzo * nuevo  = new lienzo("","",visibilidad,NULL,NULL);
+    lienzo * nuevo  = new lienzo("","",visibilidad,NULL,NULL,"");
     if(ts->contains(nombre_lienzo)==true){        
         qDebug()<<"error esta clase ya existe";
         return "error esta clase ya existe";
     }else{
-        lienzo_activo = new lienzo("", nombre_lienzo,visibilidad,pd,t);
+        lienzo_activo = new lienzo("", nombre_lienzo,visibilidad,pd,t,"");
         pd->pl->accept(this);// instrucciones del lienzo
         nuevo->hereda=lienzo_activo->hereda;
         nuevo->id=lienzo_activo->id;
@@ -119,12 +121,13 @@ QString chequea_tipos_1::visit_lienzo3(produccion_lienzo3 *pd)
     // en este nodo se guarda el lienzo
     tabla_simbolos *t = new tabla_simbolos();// tabla de simbolos del lienzo actual
     QString nombre_lienzo=pd->iden; //nombre lienzo
-    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL);
+    QString extiende = pd->pe->accept(this);
+    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL,"");
     if(ts->contains(nombre_lienzo)==true){
         qDebug()<<"error esta clase ya existe";
         return "error esta clase ya existe";
     }else{
-        lienzo_activo = new lienzo(pd->pe->accept(this), nombre_lienzo,"publico",pd,t);
+        lienzo_activo = new lienzo(pd->pe->accept(this), nombre_lienzo,"publico",pd,t,extiende);
         pd->pl->accept(this);// instrucciones del lienzo
         nuevo->hereda=lienzo_activo->hereda;
         nuevo->id=lienzo_activo->id;
@@ -143,12 +146,13 @@ QString chequea_tipos_1::visit_lienzo4(produccion_lienzo4 *pd)
     tabla_simbolos *t = new tabla_simbolos();// tabla de simbolos del lienzo actual
     QString visibilidad=pd->pv->accept(this);//visibilidad
     QString nombre_lienzo=pd->id; //nombre lienzo
-    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL);
+    QString extiende = pd->pe->accept(this);
+    lienzo * nuevo  = new lienzo("","","publico",NULL,NULL,"");
     if(ts->contains(nombre_lienzo)==true){
         qDebug()<<"error esta clase ya existe";
         return "error esta clase ya existe";
     }else{
-        lienzo_activo = new lienzo(pd->pe->accept(this), nombre_lienzo,visibilidad,pd,t);
+        lienzo_activo = new lienzo(pd->pe->accept(this), nombre_lienzo,visibilidad,pd,t,extiende);
         pd->pl->accept(this);// instrucciones del lienzo
         nuevo->hereda=lienzo_activo->hereda;
         nuevo->id=lienzo_activo->id;
@@ -163,13 +167,13 @@ QString chequea_tipos_1::visit_lienzo4(produccion_lienzo4 *pd)
 
 QString chequea_tipos_1::visit_lienzo5(produccion_lienzo5 *pd)
 {
-    pd->pd->accept(this);
+    pd->pd->accept(this);//ejecuta la declaracion de variables
     return "";
 }
 
 QString chequea_tipos_1::visit_lienzo6(produccion_lienzo6 *pd)
 {
-    pd->pl->accept(this);
+    pd->pl->accept(this);//ejecuta asignacion de variables
     return "";
 }
 
@@ -224,25 +228,35 @@ QString chequea_tipos_1::visit_declaracion_variable1(produccion_declaracion_vari
     QStringList vec=listado.split(",");
     for(int i=0;i<vec.length();i++){
         variable*var= new variable(tipo,vec[i],"","","conservar");
-        if(lienzo_activo->ts->contains(vec[i])==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+vec[i];
-            return "error la variable "+vec[i]+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
             if(metodo_activo!=NULL){
-                metodo_activo->ts->insert(vec[i],var);
+                if(metodo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                }else{
+                    metodo_activo->ts->insert(vec[i],var);
+                }
             }else{
-                lienzo_activo->ts->insert(vec[i],var);
+                if(lienzo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                }else{
+                    lienzo_activo->ts->insert(vec[i],var);
+                }
             }
-        }
     }
     }else{
         variable*var= new variable(tipo,listado,"","","conservar");
-        if(lienzo_activo->ts->contains(listado)==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+listado;
-            return "error la variable "+listado+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
-            if(metodo_activo!=NULL){
+        if(metodo_activo!=NULL){
+            if(metodo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+                return "error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+            }else{
                 metodo_activo->ts->insert(listado,var);
+            }
+        }else{
+            if(lienzo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
+                return "error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
             }else{
                 lienzo_activo->ts->insert(listado,var);
             }
@@ -261,27 +275,65 @@ QString chequea_tipos_1::visit_declaracion_variable2(produccion_declaracion_vari
     QStringList vec=listado.split(",");
     for(int i=0;i<vec.length();i++){
         variable*var= new variable(tipo,vec[i],valor,"","conservar");
-        if(lienzo_activo->ts->contains(vec[i])==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+vec[i];
-            return "error la variable "+vec[i]+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
             if(metodo_activo!=NULL){
-                metodo_activo->ts->insert(vec[i],var);
+                if(metodo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                }else{
+                    verifica_tipos*v=new verifica_tipos();
+                    QString valido=v->asigna_tipo(tipo,valor);
+                    if(valido.contains("error")==true){
+                        return "error en la asignacion de la variable "+vec[i];
+                    }else{
+                        metodo_activo->ts->insert(vec[i],var);
+                        return "";
+                    }
+                }
             }else{
-                lienzo_activo->ts->insert(vec[i],var);
+                if(lienzo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                }else{
+                    verifica_tipos*v=new verifica_tipos();
+                    QString valido=v->asigna_tipo(tipo,valor);
+                    if(valido.contains("error")==true){
+                        return "error en la asignacion de la variable "+vec[i];
+                    }else{
+                        lienzo_activo->ts->insert(vec[i],var);
+                        return "";
+                    }
+                }
             }
-        }
     }
     }else{
         variable*var= new variable(tipo,listado,valor,"","conservar");
-        if(lienzo_activo->ts->contains(listado)==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+listado;
-            return "error la variable "+listado+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
-            if(metodo_activo!=NULL){
-                metodo_activo->ts->insert(listado,var);
+        if(metodo_activo!=NULL){
+            if(metodo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+                return "error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
             }else{
-                lienzo_activo->ts->insert(listado,var);
+                verifica_tipos*v=new verifica_tipos();
+                QString valido=v->asigna_tipo(tipo,valor);
+                if(valido.contains("error")==true){
+                    return "error en la asignacion de la variable "+listado;
+                }else{
+                    metodo_activo->ts->insert(listado,var);
+                    return "";
+                }
+            }
+        }else{
+            if(lienzo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
+                return "error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
+            }else{
+                verifica_tipos*v=new verifica_tipos();
+                QString valido=v->asigna_tipo(tipo,valor);
+                if(valido.contains("error")==true){
+                    return "error en la asignacion de la variable "+listado;
+                }else{
+                    lienzo_activo->ts->insert(listado,var);
+                    return "";
+                }
             }
         }
     }
@@ -296,25 +348,35 @@ QString chequea_tipos_1::visit_declaracion_variable3(produccion_declaracion_vari
     QStringList vec=listado.split(",");
     for(int i=0;i<vec.length();i++){
         variable*var= new variable(tipo,vec[i],"","","");
-        if(lienzo_activo->ts->contains(vec[i])==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+vec[i];
-            return "error la variable "+vec[i]+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
             if(metodo_activo!=NULL){
-                metodo_activo->ts->insert(vec[i],var);
+                if(metodo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                }else{
+                    metodo_activo->ts->insert(vec[i],var);
+                }
             }else{
-                lienzo_activo->ts->insert(vec[i],var);
+                if(lienzo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                }else{
+                    lienzo_activo->ts->insert(vec[i],var);
+                }
             }
-        }
     }
     }else{
         variable*var= new variable(tipo,listado,"","","");
-        if(lienzo_activo->ts->contains(listado)==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+listado;
-            return "error la variable "+listado+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
-            if(metodo_activo!=NULL){
+        if(metodo_activo!=NULL){
+            if(metodo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+                return "error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+            }else{
                 metodo_activo->ts->insert(listado,var);
+            }
+        }else{
+            if(lienzo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
+                return "error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
             }else{
                 lienzo_activo->ts->insert(listado,var);
             }
@@ -332,26 +394,36 @@ QString chequea_tipos_1::visit_declaracion_variable4(produccion_declaracion_vari
     if(listado.contains(",")){
     QStringList vec=listado.split(",");
     for(int i=0;i<vec.length();i++){
-        variable*var= new variable(tipo,vec[i],valor,"","conservar");
-        if(lienzo_activo->ts->contains(vec[i])==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+vec[i];
-            return "error la variable "+vec[i]+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
+        variable*var= new variable(tipo,vec[i],valor,"","");
             if(metodo_activo!=NULL){
-                metodo_activo->ts->insert(vec[i],var);
+                if(metodo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el metodo "+metodo_activo->id;
+                }else{
+                    metodo_activo->ts->insert(vec[i],var);
+                }
             }else{
-                lienzo_activo->ts->insert(vec[i],var);
+                if(lienzo_activo->ts->contains(vec[i])==true){
+                    qDebug()<<"error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                    return "error la variable "+vec[i]+" ya existe en  el lienzo "+lienzo_activo->id;
+                }else{
+                    lienzo_activo->ts->insert(vec[i],var);
+                }
             }
-        }
     }
     }else{
-        variable*var= new variable(tipo,listado,valor,"","conservar");
-        if(lienzo_activo->ts->contains(listado)==true){
-            qDebug()<<"error la variable ya existe en este lienzo"+listado;
-            return "error la variable "+listado+" ya existe en  lienzo "+lienzo_activo->id;
-        }else{
-            if(metodo_activo!=NULL){
+        variable*var= new variable(tipo,listado,valor,"","");
+        if(metodo_activo!=NULL){
+            if(metodo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+                return "error la variable "+listado+" ya existe en  el metodo "+metodo_activo->id;
+            }else{
                 metodo_activo->ts->insert(listado,var);
+            }
+        }else{
+            if(lienzo_activo->ts->contains(listado)==true){
+                qDebug()<<"error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
+                return "error la variable "+listado+" ya existe en  el lienzo "+lienzo_activo->id;
             }else{
                 lienzo_activo->ts->insert(listado,var);
             }
@@ -362,7 +434,6 @@ QString chequea_tipos_1::visit_declaracion_variable4(produccion_declaracion_vari
 
 QString chequea_tipos_1::visit_tipo1(produccion_tipo1 *pd)
 {
-
     return pd->tipo;
 }
 
@@ -388,12 +459,17 @@ QString chequea_tipos_1::visit_tipo5(produccion_tipo5 *pd)
 
 QString chequea_tipos_1::visit_asignacion2(produccion_asignacion2 *pd)
 {
-    return pd->pe->accept(this);//visita una expresion
+    //visita una expresion
+    return pd->pe->accept(this);//d
+}
+
+QString chequea_tipos_1::visit_expresion_llamada(expresion_llamada_metodo *pd){
+    return "";
 }
 
 QString chequea_tipos_1::visit_lista_asignacion1(produccion_lista_asignacion1 *pd)
 {
-   pd->pl->accept(this);
+  /* pd->pl->accept(this);
    QString id=pd->iden;
    QString valor=pd->pe->accept(this);
        if(lienzo_activo->ts->contains(id)==true){
@@ -411,13 +487,14 @@ QString chequea_tipos_1::visit_lista_asignacion1(produccion_lista_asignacion1 *p
        }else{
            qDebug()<<"error la variable no existe en este lienzo: "+id;
            return "error la variable "+id+" no existe en  lienzo "+"   "+lienzo_activo->id;
-       }
+       }*/
+    //m
    return "";
 }
 
 QString chequea_tipos_1::visit_lista_asignacion2(produccion_lista_asignacion2 *pd)
 {
-    QString id=pd->iden;
+   /* QString id=pd->iden;
     QString valor=pd->pe->accept(this);
         if(lienzo_activo->ts->contains(id)==true){
             if(metodo_activo!=NULL){
@@ -435,13 +512,13 @@ QString chequea_tipos_1::visit_lista_asignacion2(produccion_lista_asignacion2 *p
             qDebug()<<"error la variable no existe en este lienzo: "+id;
             return "error la variable "+id+" no existe en  lienzo "+"   "+lienzo_activo->id;
         }
-
+*///m
     return "";
 }
 
 QString chequea_tipos_1::visit_lista_asignacion3(produccion_lista_asignacion3 *pd)
 {
-    QString id=pd->iden;
+    /*QString id=pd->iden;
     QString valor=pd->pe->accept(this);
         if(lienzo_activo->ts->contains(id)==true){
             if(metodo_activo!=NULL){
@@ -461,14 +538,14 @@ QString chequea_tipos_1::visit_lista_asignacion3(produccion_lista_asignacion3 *p
             qDebug()<<"error la variable no existe en este lienzo: "+id;
             return "error la variable "+id+" no existe en  lienzo "+"   "+lienzo_activo->id;
         }
-
+*///m
     return "";
 
 }
 
 QString chequea_tipos_1::visit_lista_asignacion4(produccion_lista_asignacion4 *pd)
 {
-    QString id=pd->iden;
+    /*QString id=pd->iden;
     QString valor=pd->pe->accept(this);
         if(lienzo_activo->ts->contains(id)==true){
             if(metodo_activo!=NULL){
@@ -488,16 +565,16 @@ QString chequea_tipos_1::visit_lista_asignacion4(produccion_lista_asignacion4 *p
             qDebug()<<"error la variable no existe en este lienzo: "+id;
             return "error la variable "+id+" no existe en  lienzo "+"   "+lienzo_activo->id;
         }
-
+*///m
     return "";
 
 }
 
 QString chequea_tipos_1::visit_asignacion1(produccion_asignacion1 *pd)
 {
-    pd->pe->accept(this);
-    pd->pl->accept(this);
-    return "";
+    //pd->pe->accept(this);
+    //pd->pl->accept(this);
+    return "";//m
 
 }
 
@@ -583,6 +660,11 @@ QString chequea_tipos_1::visit_instruccion13(produccion_instruccion13*pd)
 {
     pd->pp->accept(this);//visita la produccion PRINCIPAL del lienzo
     return "";
+}
+
+QString chequea_tipos_1::visit_instruccion14(produccion_instruccion14 *pd)
+{
+    return"";
 }
 
 QString chequea_tipos_1::visit_expresion_igual(Expresion_igual *e)
@@ -727,7 +809,7 @@ QString chequea_tipos_1::visit_expresion_potencia(expresion_potencia *e)
     QString b=e->exp2->accept(this);//potencia
     verifica_tipos*v=new verifica_tipos();
     QString res=v->verifica_tipo(a,b);
-    double val;
+   /* double val;
     if(!res.contains("cadena") && !res.contains("error")){
         if(res.contains("bool-bool")){
             return "error";
@@ -748,7 +830,8 @@ QString chequea_tipos_1::visit_expresion_potencia(expresion_potencia *e)
     }else{
       qDebug()<<"error al intentar elevar "+a+" a "+b;
       return "error";
-    }
+    }*/
+    return res;
 }
 
 QString chequea_tipos_1::visit_expresion_mas(expresion_mas *e)
@@ -757,7 +840,7 @@ QString a=e->exp1->accept(this);
 QString b=e->exp2->accept(this);
 verifica_tipos*v=new verifica_tipos();
 QString res=v->verifica_tipo(a,b);
-if(res.contains("cadena") && !res.contains("error") || res=="bool-bool"){
+/*if(res.contains("cadena") && !res.contains("error") || res=="bool-bool"){
     if(res.contains("cadena-bool")){
         if(b=="true"){
             return a+" "+"1";
@@ -773,7 +856,8 @@ if(res.contains("cadena") && !res.contains("error") || res=="bool-bool"){
         return QString::number(val);
     }else{
     qDebug()<<"error al intentar sumar "+a+" con "+b;
-    }
+    }*/
+    return res;
 }
 
 QString chequea_tipos_1::visit_expresion_menos(expresion_menos *e)
@@ -782,7 +866,7 @@ QString chequea_tipos_1::visit_expresion_menos(expresion_menos *e)
     QString b=e->exp2->accept(this);
     verifica_tipos*v=new verifica_tipos();
     QString res=v->verifica_tipo(a,b);
-    double val=0;
+  /*  double val=0;
     if(!res.contains("cadena") && !res.contains("error")){
         if(res.contains("bool-bool")){
             return v->resta_bool(a,b);
@@ -792,7 +876,8 @@ QString chequea_tipos_1::visit_expresion_menos(expresion_menos *e)
         }
     }else{
       qDebug()<<"error al intentar restar "+a+" con "+b;
-    }
+    }*/
+    return res;
 }
 
 QString chequea_tipos_1::visit_expresion_divi(expresion_divi *e)
@@ -801,7 +886,7 @@ QString chequea_tipos_1::visit_expresion_divi(expresion_divi *e)
     QString b=e->exp2->accept(this);
     verifica_tipos*v=new verifica_tipos();
     QString res=v->verifica_tipo(a,b);
-    double val;
+    /*double val;
     if(!res.contains("cadena") && !res.contains("error")){
         if(res.contains("bool-bool")){
             return "error";
@@ -822,7 +907,8 @@ QString chequea_tipos_1::visit_expresion_divi(expresion_divi *e)
     }else{
       qDebug()<<"error al intentar divividr "+a+" con "+b;
       return "error";
-    }
+    }*/
+    return res;
 }
 
 QString chequea_tipos_1::visit_expresion_por(expresion_por*e)
@@ -831,8 +917,7 @@ QString chequea_tipos_1::visit_expresion_por(expresion_por*e)
     QString b=e->exp2->accept(this);
     verifica_tipos*v=new verifica_tipos();
     QString res=v->verifica_tipo(a,b);
-    double val;
-    if(!res.contains("cadena") && !res.contains("error")){
+    /*if(!res.contains("cadena") && !res.contains("error")){
         if(res.contains("bool-bool")){
             return v->mul_bool(a,b);
         }else{
@@ -841,7 +926,8 @@ QString chequea_tipos_1::visit_expresion_por(expresion_por*e)
         }
     }else{
       qDebug()<<"error al intentar multiplicar "+a+" con "+b;
-    }
+    }*/
+    return res;
 }
 
 QString chequea_tipos_1::visit_expresion_masmas(expresion_masmas *e)
@@ -878,24 +964,28 @@ QString chequea_tipos_1::visit_expresion_numero(expresion_numero *e)
 QString chequea_tipos_1::visit_expresion_iden(expresion_iden *e)
 {
     QString id=e->iden->accept(this);
-        if(lienzo_activo->ts->contains(id)==true){
+        //if(lienzo_activo->ts->contains(id)==true){
             if(metodo_activo!=NULL){
                 if(metodo_activo->ts->contains(id)==true){
                     variable*v=(variable*)metodo_activo->ts->take(id);
                     metodo_activo->ts->insert(id,v);
                     return v->valor;
+                }else if(lienzo_activo->ts->contains(id)==true){
+                    variable*v=(variable*)lienzo_activo->ts->take(id);
+                    lienzo_activo->ts->insert(id,v);
+                    return v->valor;
+                }else{
+                    return "error "+id+" no fue encontrado en el metodo ni en el lienzo";
                 }
-            }else{
+            }else if(lienzo_activo!=NULL){
+                if(lienzo_activo->ts->contains(id)==true){
                 variable*v=(variable*)lienzo_activo->ts->take(id);
                 lienzo_activo->ts->insert(id,v);
                 return v->valor;
+                }else{
+                    return "error "+id+" no fue encontrado en el lienzo";
+                }
             }
-        }else{
-            qDebug()<<"error la variable no existe en este lienzo: "+id;
-            return "error la variable "+id+" no existe en  lienzo "+"   "+lienzo_activo->id;
-        }
-
-    return "error";
 }
 
 QString chequea_tipos_1::visit_expresion_caracter(expresion_caracter *e)
@@ -925,60 +1015,35 @@ QString chequea_tipos_1::visit_expresion_cadenacomillas(expresion_cadenacomillas
 
 QString chequea_tipos_1::visit_ciclos1(produccion_ciclos1 *pd)//aki se ejecuta un if_else
 {
-    if (pd->pe->accept(this)=="true"){
-        pd->l1->accept(this);
-    }else{
-        pd->l2->accept(this);
-    }
+    return pd->pe->accept(this)+pd->l1->accept(this)+pd->l2->accept(this);
 }
 
 QString chequea_tipos_1::visit_ciclos2(produccion_ciclos2 *pd)//aki se ejecuta un if
 {
-    if(pd->pe->accept(this)=="true"){
-        pd->l1->accept(this);
-    }
-    return "";
+
+    return pd->pe->accept(this)+pd->l1->accept(this);
 
 }
 
 QString chequea_tipos_1::visit_ciclos3(produccion_ciclos3 *pd)//aki se ejecuta un while
-{
-    while(pd->pe->accept(this)=="true"){
-        pd->l1->accept(this);
-    }
-    return "";
+{    
+    return pd->pe->accept(this)+pd->l1->accept(this);
 
 }
 
 QString chequea_tipos_1::visit_ciclos4(produccion_ciclos4 *pd)//aki se ejecuta un for
 {
-
-    pd->pi->accept(this);
-    while(pd->pe->accept(this)=="true"){
-        pd->pl->accept(this);
-        pd->pf->accept(this);
-    }
-
-    return "";
-
+    return pd->pi->accept(this)+pd->pe->accept(this)+pd->pl->accept(this)+pd->pf->accept(this);
 }
 
 QString chequea_tipos_1::visit_ciclos5(produccion_ciclos5 *pd)//aki se ejecuta un do while
-{    
-    pd->pl->accept(this);
-    while(pd->pe->accept(this)=="true"){
-        pd->pl->accept(this);
-    }
-    return "";
-
+{
+    return pd->pl->accept(this)+pd->pe->accept(this)+pd->pl->accept(this);
 }
 
 QString chequea_tipos_1::visit_ciclos6(produccion_ciclos6 *pd)//aki se ejecuta un switch
-{
-    pd->pe->accept(this);//la expresion se ejecuta aki
-    pd->pl->accept(this);//ejecuta todo el listado de casos
-    return "";
-
+{    
+    return pd->pe->accept(this)+pd->pl->accept(this);
 }
 
 QString chequea_tipos_1::visit_lista_case1(produccion_lista_case1 *pd)
@@ -1025,16 +1090,36 @@ QString chequea_tipos_1::visit_lista_parametros3(produccion_lista_parametros3 *p
 
 QString chequea_tipos_1::visit_parametro1(produccion_parametro1 *pd)
 {//en este nodo se puede guardar el parametro en la tabla de simbolos del metodo
-    QString iden =pd->id; // este el nombre del parametro
+    QString iden =pd->id->accept(this); // este el nombre del parametro
     QString tipo =pd->pt->accept(this);//este debe ser el tipo del parametro
     variable * v = new variable(tipo,iden,"","privado","");
     if(metodo_activo==NULL){
         qDebug()<<"error faltal";
         return "error faltal";
     }else{
-        metodo_activo->ts->insert(iden,v);
+        metodo_activo->parametros->append(v);
     }
     return "";
+
+}
+
+
+void chequea_tipos_1::copia_metodo_actual(declaracion_metodo *m1, declaracion_metodo *m2){
+    m1->id=m2->id;
+    m1->lista_parametros=m2->lista_parametros;
+    m1->metodo=m2->metodo;
+    m1->tipo=m2->tipo;
+    m1->ts=m2->ts;
+    m1->valor=m2->valor;
+    m1->visibilidad=m2->visibilidad;
+    m1->conservar=m2->conservar;
+    m1->parametros = m2->parametros;
+    m1->vector=m2->vector;
+    m1->instrucciones=m2->instrucciones;
+    m2->vector="";
+}
+
+void chequea_tipos_1::insertar_metodo(declaracion_metodo *m1, declaracion_metodo *m2){
 
 }
 
@@ -1042,38 +1127,51 @@ QString chequea_tipos_1::visit_declaracion_metodo1(produccion_declaracion_metodo
 {//en esta parte se declara un metodo sin la palabra conservar falta agregar ese atributo a la
     //clase declaracion_metodo
     tabla_simbolos *t = new tabla_simbolos();
-    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"");
-    QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"",NULL);
+    QString identificador1 =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
     QString tipo =pd->pt->accept(this);//este es el tipo del metodo
 
-    if(lienzo_activo->ts->contains(identificador)==true){
-        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador,pd->pp,t,"conservar");
+    if(lienzo_activo->ts->contains(identificador1)==true){
+        declaracion_metodo * actual =(declaracion_metodo*) lienzo_activo->ts->value(identificador1);
+        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
-        lienzo_activo->ts->replace(identificador,metodo);
-        qDebug()<<"error el metodo ya existe en este lienzo";
-        return "error el metodo ya existe en este lienzo";
+        if(actual->parametros->count()==metodo_activo->parametros->count()){
+            bool diff = false;
+            QLinkedList<simbolo*>::iterator i;
+            QLinkedList<simbolo*>::iterator j;
+            for (i =actual->parametros->begin(), j = metodo_activo->parametros->begin(); i!=actual->parametros->end(), j!=metodo_activo->parametros->end();i++,j++){
+                variable * v1 =(variable *)*i;
+                variable * v2 =(variable *)*j;
+                if(v1->tipo!=v2->tipo){
+                    diff =true;
+                    break;
+                }
+            }
+            if(diff){
+                copia_metodo_actual(metodo,metodo_activo);
+                lienzo_activo->ts->insert(identificador,metodo);
+            }else{
+                qDebug()<<"error el metodo ya existe en este lienzo y no se puede sobrecargar";
+                return "error el metodo ya existe en este lienzo";
+            }
+        }else if(actual->parametros->count()!=metodo_activo->parametros->count()){
+            copia_metodo_actual(metodo,metodo_activo);
+            lienzo_activo->ts->insert(identificador,metodo);
+
+        }else{
+            qDebug()<<"error el metodo ya existe en este lienzo";
+            return "error el metodo ya existe en este lienzo";
+        }
+
     }else{
-        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador,pd->pp,t,"conservar");
+        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
-        lienzo_activo->ts->insert(identificador,metodo);
+        copia_metodo_actual(metodo,metodo_activo);
+        lienzo_activo->ts->insert(identificador,metodo);        
 
     }
     metodo_activo=NULL;
@@ -1084,37 +1182,50 @@ QString chequea_tipos_1::visit_declaracion_metodo1(produccion_declaracion_metodo
 QString chequea_tipos_1::visit_declaracion_metodo2(produccion_declaracion_metodo2 *pd)
 {
     tabla_simbolos *t = new tabla_simbolos();
-    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"");
-    QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"",NULL);
+    QString identificador1 =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
     QString tipo =pd->pt->accept(this);//este es el tipo del metodo
 
-    if(lienzo_activo->ts->contains(identificador)==true){
-        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador,pd->pp,t,"");
+    if(lienzo_activo->ts->contains(identificador1)==true){
+        declaracion_metodo * actual =(declaracion_metodo*) lienzo_activo->ts->value(identificador1);
+        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
-        lienzo_activo->ts->replace(identificador,metodo);
-        qDebug()<<"error el metodo ya existe en este lienzo";
-        return "error el metodo ya existe en este lienzo";
+        if(actual->parametros->count()==metodo_activo->parametros->count()){
+            bool diff = false;
+            QLinkedList<simbolo*>::iterator i;
+            QLinkedList<simbolo*>::iterator j;
+            for (i =actual->parametros->begin(), j = metodo_activo->parametros->begin(); i!=actual->parametros->end(), j!=metodo_activo->parametros->end();i++,j++){
+                variable * v1 =(variable *)*i;
+                variable * v2 =(variable *)*j;
+                if(v1->tipo!=v2->tipo){
+                    diff =true;
+                    break;
+                }
+            }
+            if(diff){
+                copia_metodo_actual(metodo,metodo_activo);
+                lienzo_activo->ts->insert(identificador,metodo);
+            }else{
+                qDebug()<<"error el metodo ya existe en este lienzo y no se puede sobrecargar";
+                return "error el metodo ya existe en este lienzo";
+            }
+        }else if(actual->parametros->count()!=metodo_activo->parametros->count()){
+            copia_metodo_actual(metodo,metodo_activo);
+            lienzo_activo->ts->insert(identificador,metodo);
+
+        }else{
+            qDebug()<<"error el metodo ya existe en este lienzo";
+            return "error el metodo ya existe en este lienzo";
+        }
+
     }else{
-        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador,pd->pp,t,"");
+        metodo_activo = new declaracion_metodo(pd,"publico","",tipo,identificador1,pd->pp,t,"",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
+        copia_metodo_actual(metodo,metodo_activo);
         lienzo_activo->ts->insert(identificador,metodo);
 
     }
@@ -1127,36 +1238,48 @@ QString chequea_tipos_1::visit_declaracion_metodo2(produccion_declaracion_metodo
 QString chequea_tipos_1::visit_declaracion_metodo3(produccion_declaracion_metodo3 *pd)
 {
     tabla_simbolos *t = new tabla_simbolos();
-    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"");
-    QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"",NULL);
+    QString identificador1 =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+    if(lienzo_activo->ts->contains(identificador1)==true){
+        declaracion_metodo * actual =(declaracion_metodo*) lienzo_activo->ts->value(identificador1);
+        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+        pd->pl->accept(this); //instrucciones
+        pd->pp->accept(this);//este visita la lista de parametros
+        if(actual->parametros->count()==metodo_activo->parametros->count()){
+            bool diff = false;
+            QLinkedList<simbolo*>::iterator i;
+            QLinkedList<simbolo*>::iterator j;
+            for (i =actual->parametros->begin(), j = metodo_activo->parametros->begin(); i!=actual->parametros->end(), j!=metodo_activo->parametros->end();i++,j++){
+                variable * v1 =(variable *)*i;
+                variable * v2 =(variable *)*j;
+                if(v1->tipo!=v2->tipo){
+                    diff =true;
+                    break;
+                }
+            }
+            if(diff){
+                copia_metodo_actual(metodo,metodo_activo);
+                lienzo_activo->ts->insert(identificador,metodo);
+            }else{
+                qDebug()<<"error el metodo ya existe en este lienzo y no se puede sobrecargar";
+                return "error el metodo ya existe en este lienzo";
+            }
+        }else if(actual->parametros->count()!=metodo_activo->parametros->count()){
+            copia_metodo_actual(metodo,metodo_activo);
+            lienzo_activo->ts->insert(identificador,metodo);
 
-    if(lienzo_activo->ts->contains(identificador)==true){
-        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador,pd->pp,t,"conservar");
-        pd->pl->accept(this); //instrucciones
-        pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
-        lienzo_activo->ts->replace(identificador,metodo);
-        qDebug()<<"error el metodo ya existe en este lienzo";
-        return "error el metodo ya existe en este lienzo";
+        }else{
+            qDebug()<<"error el metodo ya existe en este lienzo";
+            return "error el metodo ya existe en este lienzo";
+        }
+
     }else{
-        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador,pd->pp,t,"conservar");
+        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
+        copia_metodo_actual(metodo,metodo_activo);
         lienzo_activo->ts->insert(identificador,metodo);
 
     }
@@ -1169,41 +1292,52 @@ QString chequea_tipos_1::visit_declaracion_metodo3(produccion_declaracion_metodo
 QString chequea_tipos_1::visit_declaracion_metodo4(produccion_declaracion_metodo4 *pd)
 {
     tabla_simbolos *t = new tabla_simbolos();
-    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"");
-    QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
+    declaracion_metodo * metodo = new declaracion_metodo(NULL,"","","","",NULL,NULL,"",NULL);
+    QString identificador1 =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
 
-    if(lienzo_activo->ts->contains(identificador)==true){
-        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador,pd->pp,t,"");
+    if(lienzo_activo->ts->contains(identificador1)==true){
+        declaracion_metodo * actual =(declaracion_metodo*) lienzo_activo->ts->value(identificador1);
+        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador1,pd->pp,t,"conservar",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
-        lienzo_activo->ts->replace(identificador,metodo);
-        qDebug()<<"error el metodo ya existe en este lienzo";
-        return "error el metodo ya existe en este lienzo";
+        if(actual->parametros->count()==metodo_activo->parametros->count()){
+            bool diff = false;
+            QLinkedList<simbolo*>::iterator i;
+            QLinkedList<simbolo*>::iterator j;
+            for (i =actual->parametros->begin(), j = metodo_activo->parametros->begin(); i!=actual->parametros->end(), j!=metodo_activo->parametros->end();i++,j++){
+                variable * v1 =(variable *)*i;
+                variable * v2 =(variable *)*j;
+                if(v1->tipo!=v2->tipo){
+                    diff =true;
+                    break;
+                }
+            }
+            if(diff){
+                copia_metodo_actual(metodo,metodo_activo);
+                lienzo_activo->ts->insert(identificador,metodo);
+            }else{
+                qDebug()<<"error el metodo ya existe en este lienzo y no se puede sobrecargar";
+                return "error el metodo ya existe en este lienzo";
+            }
+        }else if(actual->parametros->count()!=metodo_activo->parametros->count()){
+            copia_metodo_actual(metodo,metodo_activo);
+            lienzo_activo->ts->insert(identificador,metodo);
+
+        }else{
+            qDebug()<<"error el metodo ya existe en este lienzo";
+            return "error el metodo ya existe en este lienzo";
+        }
     }else{
-        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador,pd->pp,t,"");
+        metodo_activo = new declaracion_metodo(pd,"publico","","void",identificador1,pd->pp,t,"",pd->pl);
+        QString identificador =pd->iden->accept(this); //produccion de declarador aca esta el identificador del metodo
         pd->pl->accept(this); //instrucciones
         pd->pp->accept(this);//este visita la lista de parametros
-        metodo->id=metodo_activo->id;
-        metodo->lista_parametros=metodo_activo->lista_parametros;
-        metodo->metodo=metodo_activo->metodo;
-        metodo->tipo=metodo_activo->tipo;
-        metodo->ts=metodo_activo->ts;
-        metodo->valor=metodo_activo->valor;
-        metodo->visibilidad=metodo_activo->visibilidad;
-        metodo->conservar=metodo_activo->conservar;
+        copia_metodo_actual(metodo,metodo_activo);
         lienzo_activo->ts->insert(identificador,metodo);
 
     }
     metodo_activo=NULL;
-
     return "";
 
 }
@@ -1231,8 +1365,11 @@ QString chequea_tipos_1::visit_declaracion_metodo4(produccion_declaracion_metodo
 
  QString chequea_tipos_1::visit_declarador_2(produccion_declarador_2*pd){
      pd->iden;
+     if(metodo_activo!=NULL){
+         metodo_activo->vector="si";
+     }
      pd->lc->accept(this);
-     return "";
+     return pd->iden;
 
 }
 
@@ -1254,3 +1391,38 @@ QString chequea_tipos_1::visit_declaracion_variable6(produccion_declaracion_vari
 
 
 
+QString chequea_tipos_1::visit_expresion_epsilon(expresion_epsilon*pd){
+    return "";
+}
+
+QString chequea_tipos_1::visit_declaracion_variable_7(produccion_declaracion_variable7*pd) {
+    //declaracion de vectores 7
+    pd->asignacion->accept(this);
+    pd->conservar;
+    pd->lnombre->accept(this);
+    pd->tipo->accept(this);
+    return "";
+}
+
+QString chequea_tipos_1::visit_declaracion_variable_8(produccion_declaracion_variable_8*pd){
+    //declaracion de vectores 8
+    pd->conservar;
+    pd->lnombre->accept(this);
+    pd->tipo->accept(this);
+    return "";
+
+}
+
+ QString chequea_tipos_1::visit_expresion_vector(expresion_vector*pd) {
+     return pd->exp1->accept(this);
+ }
+
+ QString chequea_tipos_1::visit_lista_expresion1(produccion_lista_expresion1 *pd)
+ {
+    return "";
+ }
+
+ QString chequea_tipos_1::visit_lista_expresion2(produccion_lista_expresion2 *pd)
+ {
+    return"";
+ }

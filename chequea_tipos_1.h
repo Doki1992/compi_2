@@ -18,8 +18,12 @@ public:
     tabla_simbolos*ts;
     lienzo * lienzo_activo;
     declaracion_metodo * metodo_activo;
+    void copia_metodo_actual(declaracion_metodo*m1,declaracion_metodo*m2);
+    void insertar_metodo(declaracion_metodo*m1,declaracion_metodo*m2);
+    QString extiende="";
 
-    virtual QString visit_pintar_s1(produccion_pintar_s11*pd) ;
+
+    virtual QString visit_pintar_s11(produccion_pintar_s11*pd) ;
     virtual QString visit_pintar_or1(produccion_pintar_or1*pd) ;
     virtual QString visit_pintar_p1(produccion_pintar_p1*pd) ;
     virtual QString visit_principal1(produccion_principal1*pd) ;
@@ -69,6 +73,7 @@ public:
     virtual QString visit_instruccion11(produccion_instruccion11*pd);
     virtual QString visit_instruccion12(produccion_instruccion12*pd);
     virtual QString visit_instruccion13(produccion_instruccion13*pd);
+    virtual QString visit_instruccion14(produccion_instruccion14*pd);
     virtual QString visit_expresion_igual(Expresion_igual*e);
     virtual QString visit_expresion_diferente(expresion_diferente*e);
     virtual QString visit_expresion_y(Expresion_y*e);
@@ -125,6 +130,13 @@ public:
     //nuevo2
     virtual QString visit_declaracion_variable5(produccion_declaracion_variable5*pd) ;
     virtual QString visit_declaracion_variable6(produccion_declaracion_variable6*pd) ;
+    virtual QString visit_expresion_epsilon(expresion_epsilon*pd) ;
+    virtual QString visit_declaracion_variable_7(produccion_declaracion_variable7*pd) ;
+    virtual QString visit_declaracion_variable_8(produccion_declaracion_variable_8*pd) ;
+    virtual QString visit_expresion_vector(expresion_vector*pd) ;
+    virtual QString visit_lista_expresion1(produccion_lista_expresion1*pd);
+    virtual QString visit_lista_expresion2(produccion_lista_expresion2*pd);
+    virtual QString visit_expresion_llamada(expresion_llamada_metodo*pd) ;
 };
 
 #endif // CHEQUEA_TIPOS_1_H

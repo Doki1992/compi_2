@@ -60,63 +60,64 @@ extern int yydebug;
     por = 270,
     divi = 271,
     aparen = 272,
-    cparen = 273,
-    acorch = 274,
-    ccorch = 275,
-    allave = 276,
-    cllave = 277,
-    potencia = 278,
-    menor = 279,
-    mayor = 280,
-    menorq = 281,
-    mayorq = 282,
-    esnulo = 283,
-    diferente = 284,
-    igualigual = 285,
-    masigual = 286,
-    menosigual = 287,
-    masmas = 288,
-    menosmenos = 289,
-    Or = 290,
-    And = 291,
-    Nand = 292,
-    Nor = 293,
-    Xor = 294,
-    cierra_lienzo = 295,
-    abre_lienzo = 296,
-    fin_sentencia = 297,
-    doble = 298,
-    boolean = 299,
-    Char = 300,
-    cadena = 301,
-    entero = 302,
-    TRUE = 303,
-    FALSE = 304,
-    lienzo = 305,
-    arreglo = 306,
-    extiende = 307,
-    publico = 308,
-    privado = 309,
-    protegido = 310,
-    var = 311,
-    conservar = 312,
-    defecto = 313,
-    si = 314,
-    sino = 315,
-    comprobar = 316,
-    caso = 317,
-    para = 318,
-    mientras = 319,
-    hacer = 320,
-    continuar = 321,
-    salir = 322,
-    pintarp = 323,
-    pintaror = 324,
-    pintars = 325,
-    retorna = 326,
-    principal = 327,
-    ordenar = 328,
-    sumarizar = 329
+    punto = 273,
+    cparen = 274,
+    acorch = 275,
+    ccorch = 276,
+    allave = 277,
+    cllave = 278,
+    potencia = 279,
+    menor = 280,
+    mayor = 281,
+    menorq = 282,
+    mayorq = 283,
+    esnulo = 284,
+    diferente = 285,
+    igualigual = 286,
+    masigual = 287,
+    menosigual = 288,
+    masmas = 289,
+    menosmenos = 290,
+    Or = 291,
+    And = 292,
+    Nand = 293,
+    Nor = 294,
+    Xor = 295,
+    cierra_lienzo = 296,
+    abre_lienzo = 297,
+    fin_sentencia = 298,
+    doble = 299,
+    boolean = 300,
+    Char = 301,
+    cadena = 302,
+    entero = 303,
+    TRUE = 304,
+    FALSE = 305,
+    lienzo = 306,
+    arreglo = 307,
+    extiende = 308,
+    publico = 309,
+    privado = 310,
+    protegido = 311,
+    var = 312,
+    conservar = 313,
+    defecto = 314,
+    si = 315,
+    sino = 316,
+    comprobar = 317,
+    caso = 318,
+    para = 319,
+    mientras = 320,
+    hacer = 321,
+    continuar = 322,
+    salir = 323,
+    pintarp = 324,
+    pintaror = 325,
+    pintars = 326,
+    retorna = 327,
+    principal = 328,
+    ordenar = 329,
+    sumarizar = 330
   };
 #endif
 
@@ -124,6 +125,8 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 #include "expresion_diferente.h"
+#include "expresion_llamada_metodo.h"
+#include "expresion_vector.h"
 #include "expresion_y.h"
 #include "expresion_epsilon.h"
 #include "expresion_igual.h"
@@ -213,6 +216,7 @@ typedef union YYSTYPE YYSTYPE;
 #include"produccion_instruccion11.h"
 #include"produccion_instruccion12.h"
 #include"produccion_instruccion13.h"
+#include"produccion_instruccion14.h"
 #include"produccion_ciclos1.h"
 #include"produccion_ciclos2.h"
 #include"produccion_ciclos3.h"
@@ -230,6 +234,9 @@ typedef union YYSTYPE YYSTYPE;
 #include"produccion_declaracion_metodo2.h"
 #include"produccion_declaracion_metodo3.h"
 #include"produccion_declaracion_metodo4.h"
+#include"produccion_lista_expresion1.h"
+#include"produccion_lista_expresion2.h"
+
 union YYSTYPE
 {
 
@@ -259,6 +266,7 @@ produccion_principal*prin;
 produccion_pintar_p*pintar;
 produccion_pintar_or*por;
 produccion_lista_nombre*pln;
+produccion_lista_expresion*prlc;
 declarador *dec;
 lista_corchetes*lc;
 

@@ -10,5 +10,5 @@ produccion_pintar_s11::produccion_pintar_s11(produccion_expresion*p1,produccion_
 
 QString produccion_pintar_s11::accept(visitor *v)
 {
-    return v->visit_pintar_s1(this);
+    return v->visit_pintar_s11(this);
 }

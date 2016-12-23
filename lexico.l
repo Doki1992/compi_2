@@ -4,19 +4,20 @@
 #include <iostream>
 #include <QString>
 int columna=0;
+int linea=0;
 %}
 letra [a-zñA-ZÑ]
 digito [0-9]
 identificador {letra}+
 caracter [\']([^\"\n]|(\\\"))[\']
 comentario "<-"[^'*']*"->"
-comentario_linea ">>"
 numero {digito}+
 decimal {digito}+[.]+{digito}+
 cadenacomillas [\"]([^\"\n]|(\\\"))*[\"]
 %%
 "="             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return igual; }
 [!]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return Not;}
+[.]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return punto;}
 [+]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return mas; }
 [-]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return menos; }
 [*]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return por; }
@@ -29,6 +30,7 @@ cadenacomillas [\"]([^\"\n]|(\\\"))*[\"]
 [}]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return cllave; }
 "^"           { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return potencia; }
 [<]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return menor; }
+"\n"           { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); linea++;columna=0;}
 [>]             { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return mayor; }
 "<="            { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return menorq; }
 ">="            { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return mayorq; }
@@ -93,7 +95,7 @@ cadenacomillas [\"]([^\"\n]|(\\\"))*[\"]
 {numero}        { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return numero; }
 {decimal}        { columna=columna+strlen(yylval.TEXT); strcpy(yylval.TEXT, yytext); return decimal; }
 {comentario}    { /*Se ignoran*/ }
-{comentario_linea}    { /*Se ignoran*/ }
+
 [[:blank:]]     { /*Se ignoran*/ }
-.               {std::cout <<yytext<<"Error Lexico "<< std::endl;}
+.               {std::cout <<yytext<<"Error Lexico en la linea"<< linea<<"columna: "<<columna<<std::endl;}
 %%

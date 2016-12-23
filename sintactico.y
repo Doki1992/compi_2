@@ -10,6 +10,8 @@
 
 //----------------------------------INCLUSION DE HEADERS DE LAS CLASES-----------------------------
 #include "expresion_diferente.h"
+#include "expresion_llamada_metodo.h"
+#include "expresion_vector.h"
 #include "expresion_y.h"
 #include "expresion_epsilon.h"
 #include "expresion_igual.h"
@@ -99,6 +101,7 @@
 #include"produccion_instruccion11.h"
 #include"produccion_instruccion12.h"
 #include"produccion_instruccion13.h"
+#include"produccion_instruccion14.h"
 #include"produccion_ciclos1.h"
 #include"produccion_ciclos2.h"
 #include"produccion_ciclos3.h"
@@ -116,6 +119,8 @@
 #include"produccion_declaracion_metodo2.h"
 #include"produccion_declaracion_metodo3.h"
 #include"produccion_declaracion_metodo4.h"
+#include"produccion_lista_expresion1.h"
+#include"produccion_lista_expresion2.h"
 //---------------------------FIN DE INCLUSION DE HEADERS---------------------------------
 //----------------------------INCLUIR LAS CLASES PADRES---------------------------------
 
@@ -125,13 +130,14 @@
 //----------------------------FIN INCLUSION DE CLASES PADRES-------------------------------
 
 extern int yylineno; //linea actual donde se encuentra el parser (analisis lexico) lo maneja BISON
+extern int linea;
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
 nodo *raiz;
 int yyerror(const char* mens){
 //metodo que se llama al haber un error sintactico
 //SE IMPRIME EN CONSOLA EL ERROR
-std::cout <<mens<<" "<<yytext<< std::endl;
+std::cout <<mens<<" "<<yytext<<linea<<columna<<std::endl;
 return 0;
 }
 
@@ -184,6 +190,7 @@ produccion_principal*prin;
 produccion_pintar_p*pintar;
 produccion_pintar_or*por;
 produccion_lista_nombre*pln;
+produccion_lista_expresion*prlc;
 declarador *dec;
 lista_corchetes*lc;
 }
@@ -203,6 +210,7 @@ lista_corchetes*lc;
 %token<TEXT>  por
 %token<TEXT>  divi
 %token<TEXT>  aparen
+%token<TEXT>  punto
 %token<TEXT>  cparen
 %token<TEXT>  acorch
 %token<TEXT>  ccorch
@@ -277,6 +285,7 @@ lista_corchetes*lc;
 %type<pla>  LISTA_ASIGNACION
 %type<plc>  LISTA_CASE
 %type<pc>  CICLOS
+%type<prlc>  LISTA_EXPRESION
 
 %type<pexp>  EXPRESION
 %type<pp>  PARAMETRO
@@ -331,6 +340,7 @@ LISTA_NOMBRE: LISTA_NOMBRE coma DECLARADOR{$$=new produccion_lista_nombre1($1,$3
 DECLARADOR: iden {$$ = new produccion_declarador_1($1);}
 |iden LISTA_CORCHETES {$$ = new produccion_declarador_2($1, $2);}
 
+
 LISTA_CORCHETES: LISTA_CORCHETES acorch EXPRESION ccorch {$$= new produccion_lista_corchetes_1($1,$3);}
                  |acorch EXPRESION ccorch {$$= new produccion_lista_corchete_2($2);}
 
@@ -339,7 +349,7 @@ LISTA_INSTRUCCIONES: LISTA_INSTRUCCIONES INSTRUCCION{$$=new produccion_lista_ins
 
 INSTRUCCION: DECLARACION_VARIABLE fin_sentencia{$$=new produccion_instruccion1($1);}
 |DECLARACION_METODO{$$=new produccion_instruccion2($1);}
-|LISTA_ASIGNACION fin_sentencia{$$=narregloew produccion_instruccion3($1);}
+|LISTA_ASIGNACION fin_sentencia{$$=new produccion_instruccion3($1);}
 |CICLOS{$$=new produccion_instruccion4($1);}
 |PINTAR_OR{$$=new produccion_instruccion5($1);}
 |PINTAR_P{$$=new produccion_instruccion6($1);}
@@ -349,7 +359,12 @@ INSTRUCCION: DECLARACION_VARIABLE fin_sentencia{$$=new produccion_instruccion1($
 |continuar fin_sentencia{$$=new produccion_instruccion10($1);}
 |salir fin_sentencia{$$=new produccion_instruccion11($1);}
 |retorna EXPRESION fin_sentencia{$$=new produccion_instruccion12($2);}
-|PRINCIPAL{$$=new produccion_instruccion13($1);};
+|PRINCIPAL{$$=new produccion_instruccion13($1);}
+|punto iden aparen LISTA_EXPRESION cparen fin_sentencia{$$=new produccion_instruccion14($2,$4);}
+
+LISTA_EXPRESION: LISTA_EXPRESION coma EXPRESION{$$=new produccion_lista_expresion1($1,$3);}
+                 |EXPRESION{$$=new produccion_lista_expresion2($1);}
+
 
 
 
@@ -360,7 +375,7 @@ DECLARACION_VARIABLE:conservar var TIPO LISTA_NOMBRE{$$=new produccion_declaraci
 |var TIPO arreglo LISTA_NOMBRE ASIGNACION{$$=new produccion_declaracion_variable5($2,$4,$5);}
 |var TIPO arreglo LISTA_NOMBRE{$$=new produccion_declaracion_variable6($2,$4);}
 |conservar var TIPO arreglo LISTA_NOMBRE ASIGNACION{$$=new produccion_declaracion_variable7($1,$3,$5,$6);}
-|conservar var TIPO arreglo LISTA_NOMBRE{$$=new produccion_declaracion_variable8($1,$3,$5);}
+|conservar var TIPO arreglo LISTA_NOMBRE{$$=new produccion_declaracion_variable_8($1,$3,$5);}
 
 TIPO: boolean{$$=new produccion_tipo1($1);}
 |entero{$$=new produccion_tipo2($1);}
@@ -368,11 +383,13 @@ TIPO: boolean{$$=new produccion_tipo1($1);}
 |Char{$$=new produccion_tipo4($1);}
 |doble{$$=new produccion_tipo5($1);};
 
+
+
 ASIGNACION: igual EXPRESION coma LISTA_ASIGNACION{$$=new produccion_asignacion1($2,$4);}
 |igual EXPRESION{$$=new produccion_asignacion2($2);};
 
 LISTA_ASIGNACION:LISTA_ASIGNACION coma iden igual EXPRESION{$$=new produccion_lista_asignacion1($1,$3,$5);}
-|iden igual EXPRESION{$$=new produccion_lista_asignacion2($1,$3);}
+|DECLARADOR igual EXPRESION{$$=new produccion_lista_asignacion2($1,$3);}
 |iden masigual EXPRESION{$$=new produccion_lista_asignacion3($1,$3);}
 |iden menosigual EXPRESION{$$=new produccion_lista_asignacion4($1,$3);};
 
@@ -406,6 +423,9 @@ EXPRESION :EXPRESION igualigual EXPRESION{$$=new Expresion_igual($1,$3);}
                 |TRUE{$$=new expresion_true($1);}
                 |FALSE{$$=new expresion_false($1);}
                 |{$$ = new expresion_epsilon();}
+                |allave LISTA_EXPRESION cllave{$$ = new expresion_vector($2);}
+                |punto iden aparen LISTA_EXPRESION cparen{$$ = new expresion_llamada_metodo($2,$4);}
+
 
 CICLOS : si aparen EXPRESION cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo sino abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_ciclos1($3,$6,$10);}
         |si aparen EXPRESION cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_ciclos2($3,$6);}
@@ -423,11 +443,15 @@ DECLARACION_METODO: conservar TIPO DECLARADOR aparen LISTA_PARAMETROS cparen abr
 |conservar DECLARADOR aparen LISTA_PARAMETROS cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_declaracion_metodo3($2,$4,$7);}
 |DECLARADOR aparen LISTA_PARAMETROS cparen abre_lienzo LISTA_INSTRUCCIONES cierra_lienzo{$$=new produccion_declaracion_metodo4($1,$3,$6);}
 
+
+
+
 LISTA_PARAMETROS:LISTA_PARAMETROS coma PARAMETRO{$$=new produccion_lista_parametros1($1,$3);}
 |PARAMETRO{$$=new produccion_lista_parametros2($1);}
 |{$$=new produccion_lista_parametros3();};
 
-PARAMETRO: TIPO DECLARADOR{$$=new produccion_parametro1($1,$2);};
+PARAMETRO: TIPO DECLARADOR{$$=new produccion_parametro1($1,$2);}
+
 
 PINTAR_P: pintarp aparen EXPRESION coma EXPRESION coma cadenacomillas coma EXPRESION cparen fin_sentencia{$$=new produccion_pintar_p1($3,$5,$7,$9);};
 PINTAR_OR: pintaror aparen EXPRESION coma EXPRESION coma cadenacomillas coma EXPRESION coma EXPRESION coma EXPRESION cparen fin_sentencia{$$=new produccion_pintar_or1($3,$5,$7,$9,$11,$13);};

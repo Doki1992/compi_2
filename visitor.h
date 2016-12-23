@@ -2,6 +2,8 @@
 #define VISITOR_H
 #include<QString>
 #include "expresion_diferente.h"
+#include "expresion_llamada_metodo.h"
+#include "expresion_vector.h"
 #include "expresion_y.h"
 #include "expresion_igual.h"
 #include "expresion_or.h"
@@ -19,7 +21,9 @@
 #include "produccion_declarador_2.h"
 #include "produccion_declaracion_variable5.h"
 #include "produccion_declaracion_variable6.h"
-
+#include "produccion_declaracion_variable7.h"
+#include "produccion_declaracion_variable_8.h"
+#include "expresion_epsilon.h"
 #include "expresion_numero.h"
 #include "expresion_iden.h"
 #include "produccion_lista_corchete_2.h"
@@ -87,6 +91,7 @@
 #include"produccion_instruccion11.h"
 #include"produccion_instruccion12.h"
 #include"produccion_instruccion13.h"
+#include"produccion_instruccion14.h"
 #include"produccion_ciclos1.h"
 #include"produccion_ciclos2.h"
 #include"produccion_ciclos3.h"
@@ -104,9 +109,11 @@
 #include"produccion_declaracion_metodo2.h"
 #include"produccion_declaracion_metodo3.h"
 #include"produccion_declaracion_metodo4.h"
+#include"produccion_lista_expresion1.h"
+#include"produccion_lista_expresion2.h"
 class visitor{
     public:
-        virtual QString visit_pintar_s1(produccion_pintar_s11*pd) =0;
+        virtual QString visit_pintar_s11(produccion_pintar_s11*pd) =0;
         virtual QString visit_pintar_or1(produccion_pintar_or1*pd) =0;
         virtual QString visit_pintar_p1(produccion_pintar_p1*pd) =0;
         virtual QString visit_principal1(produccion_principal1*pd) =0;
@@ -156,6 +163,7 @@ class visitor{
         virtual QString visit_instruccion11(produccion_instruccion11*pd)=0;
         virtual QString visit_instruccion12(produccion_instruccion12*pd)=0;
         virtual QString visit_instruccion13(produccion_instruccion13*pd)=0;
+        virtual QString visit_instruccion14(produccion_instruccion14*pd)=0;
         virtual QString visit_expresion_igual(Expresion_igual*e)=0;
         virtual QString visit_expresion_diferente(expresion_diferente*e)=0;
         virtual QString visit_expresion_y(Expresion_y*e)=0;
@@ -210,6 +218,14 @@ class visitor{
         virtual QString visit_declarador_2(produccion_declarador_2*pd) =0;
         virtual QString visit_declaracion_variable5(produccion_declaracion_variable5*pd) =0;
         virtual QString visit_declaracion_variable6(produccion_declaracion_variable6*pd) =0;
+        virtual QString visit_expresion_epsilon(expresion_epsilon*pd) =0;
+        virtual QString visit_declaracion_variable_7(produccion_declaracion_variable7*pd) =0;
+        virtual QString visit_declaracion_variable_8(produccion_declaracion_variable_8*pd) =0;
+        virtual QString visit_expresion_vector(expresion_vector*pd) =0;
+        virtual QString visit_lista_expresion1(produccion_lista_expresion1*pd) =0;
+        virtual QString visit_lista_expresion2(produccion_lista_expresion2*pd) =0;
+        virtual QString visit_expresion_llamada(expresion_llamada_metodo*pd) =0;
 };
 
 #endif // VISITOR_H
+

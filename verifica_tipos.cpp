@@ -154,37 +154,37 @@ QString verifica_tipos::obtener_valor_booleano(QString v1)
 
 QString verifica_tipos::asigna_tipo(QString valor,QString valor2)
 {
-    if(check_bool(valor)=="bool" && check_bool(valor2)=="bool"){
+    if(valor=="bool" && check_bool(valor2)=="bool"){
         return "bool";
-    }else if(check_bool(valor)=="bool" && check_entero(valor2)=="entero"){
+    }else if(valor=="bool" && check_entero(valor2)=="entero"){
         return "error asignacion bool-entero";
-    }else if(check_bool(valor)=="bool" && check_doble(valor2)=="doble"){
+    }else if(valor=="bool" && check_doble(valor2)=="doble"){
         return "error asignacion bool-doble";
-    }else if(check_bool(valor)=="bool" && check_doble(valor2)=="cadena"){
+    }else if(valor=="bool" && check_doble(valor2)=="cadena"){
         return "error asignacion bool-cadena";
-    }else if(check_entero(valor)=="entero" && check_entero(valor2)=="entero"){
+    }else if(valor=="entero" && check_entero(valor2)=="entero"){
         return "entero";
-    }else if(check_entero(valor)=="entero" && check_bool(valor2)=="bool"){
+    }else if(valor=="entero" && check_bool(valor2)=="bool"){
         return "entero";
-    }else if(check_entero(valor)=="entero" && check_doble(valor2)=="doble"){
+    }else if(valor=="entero" && check_doble(valor2)=="doble"){
         return "entero";
-    }else if(check_entero(valor)=="entero" && check_doble(valor2)=="cadena"){
+    }else if(valor=="entero" && check_doble(valor2)=="cadena"){
         return "error de asignacion entero-cadena";
-    }else if(check_doble(valor)=="cadena" && check_entero(valor2)=="entero"){
+    }else if(valor=="cadena" && check_entero(valor2)=="entero"){
             return "cadena";
-    }else if(check_doble(valor)=="doble" && check_entero(valor2)=="entero"){
+    }else if(valor=="doble" && check_entero(valor2)=="entero"){
         return "doble";
-    }else if(check_entero(valor)=="cadena" && check_doble(valor2)=="doble"){
+    }else if(valor=="cadena" && check_doble(valor2)=="doble"){
             return "cadena";
-    }else if(check_doble(valor)=="cadena" && check_bool(valor2)=="bool"){
+    }else if(valor=="cadena" && check_bool(valor2)=="bool"){
             return "cadenal";
-    }else if(check_doble(valor)=="doble" && check_bool(valor2)=="cadena"){
+    }else if(valor=="doble" && check_bool(valor2)=="cadena"){
            return "error no se puede asignar cadena a doble";
-    }else if(check_doble(valor)=="doble" && check_bool(valor2)=="doble"){
+    }else if(valor=="doble" && check_bool(valor2)=="doble"){
            return "doble";
-    }else if(check_doble(valor)=="doble" && check_bool(valor2)=="bool"){
+    }else if(valor=="doble" && check_bool(valor2)=="bool"){
         return "doble";
-    }else if(check_entero(valor)=="cadena" && check_doble(valor2)=="cadena"){
+    }else if(valor=="cadena" && check_doble(valor2)=="cadena"){
         return "cadena";
     }else{
         return "error en la asignacion de variables";

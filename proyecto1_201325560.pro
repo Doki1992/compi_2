@@ -125,7 +125,18 @@ SOURCES += main.cpp\
     produccion_declaracion_variable5.cpp \
     produccion_declaracion_variable6.cpp \
     chequea_tipos_1.cpp \
-    verifica_tipos.cpp
+    verifica_tipos.cpp \
+    produccion_declaracion_variable7.cpp \
+    produccion_declaracion_variable_8.cpp \
+    expresion_epsilon.cpp \
+    expresion_vector.cpp \
+    produccion_instruccion14.cpp \
+    produccion_lista_expresion1.cpp \
+    produccion_lista_expresion2.cpp \
+    dialog.cpp \
+    mostrar_lineas.cpp \
+    expresion_llamada_metodo.cpp \
+    heredados.cpp
 
 HEADERS  += mainwindow.h \
     lexico.l \
@@ -268,9 +279,23 @@ HEADERS  += mainwindow.h \
     produccion_declaracion_variable5.h \
     produccion_declaracion_variable6.h \
     chequea_tipos_1.h \
-    verifica_tipos.h
+    verifica_tipos.h \
+    produccion_declaracion_variable_8.h \
+    produccion_declaracion_variable7.h \
+    expresion_epsilon.h \
+    expresion_vector.h \
+    produccion_instruccion14.h \
+    produccion_lista_expresion.h \
+    produccion_lista_expresion1.h \
+    produccion_lista_expresion2.h \
+    dialog.h \
+    mostrar_lineas.h \
+    expresion_llamada_metodo.h \
+    heredados.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui
 
 OTHER_FILES += \
-    sintactico.y
+    sintactico.y \
+    petalos.txt
